@@ -1,0 +1,9 @@
+name: MCDiscordVerify
+version: @version@
+main: space.mori.mcdiscordverify.MCDiscordVerify
+api-version: 1.14
+depend:
+authors:
+  - dalbodeule
+commands:
+permissions:
