@@ -1,4 +1,7 @@
 package space.mori.mcdiscordverify.command
 
-object discord {
+object Discord: CommandBase() {
+    override val SubCommands: Map<String, SubCommand> = mutableListOf<SubCommand>(
+
+    ).associateBy { it.name }
 }
