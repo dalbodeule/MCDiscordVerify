@@ -1,0 +1,7 @@
+{
+  "verifyKickMsg": "\u0027!verify {verifyCode}\u0027 를 디스코드의 \u0027verify\u0027 채널에 입력하세요.\n인증은 {verifyTimeout}초 후 만료됩니다.",
+  "verifySuccessMsgTitle": "인증 성공!",
+  "verifySuccessMsgDesc": "{nickname} 님의 인증이 성공했습니다.",
+  "isNotRegistedCode": "{code} 는 등록되지 않은 인증코드입니다.",
+  "removeKickMsg": "당신은 길드에서 강제로 또는 스스로 나갔습니다."
+}

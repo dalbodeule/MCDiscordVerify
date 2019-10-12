@@ -1,8 +1,20 @@
 package space.mori.mcdiscordverify.config
 
+import java.io.File
+import java.nio.file.Paths
+
 object Language : ConfigBase<LanguageData>(
     config = LanguageData(),
-    target = getTarget("lang/lang_${Config.config.lang}.json")
+    target = run {
+        val target = getTarget(Paths.get("lang", "lang_${Config.config.lang}.json"))
+
+        return@run if (!File(target.toUri()).exists()) {
+            getTarget(Paths.get("lang", "lang_en.json"))
+        } else {
+            Config.config.lang = "en"
+            target
+        }
+    }
 )
 
 data class LanguageData(

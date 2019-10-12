@@ -36,8 +36,8 @@ object Discord: Listener, ListenerAdapter() {
                  verifyCode = getRandomString(10)
             }
 
-            event.player.kickPlayer(Language.config.verifyKickMsg
-                .replace("{verifyCode\\}", verifyCode).replace("\\{verifyTimeout\\}", "${Config.config.verifyTimeout}")
+            event.player.kickPlayer("[MCDiscordVerify] " + Language.config.verifyKickMsg
+                .replace("{verifyCode}", verifyCode).replace("{verifyTimeout}", "${Config.config.verifyTimeout}")
             )
             verifyUsers[verifyCode] = event.player.uniqueId
 

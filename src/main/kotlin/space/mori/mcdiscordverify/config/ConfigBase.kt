@@ -8,7 +8,7 @@ import java.nio.file.Path
 
 open class ConfigBase<T: Any>(
     open var config: T,
-    private val target: Path = instance.dataFolder.toPath().resolve("dummy.json")
+    private val target: Path = instance.dataFolder.toPath().resolveSibling("dummy.json")
 ) {
     internal fun load() {
         if (this.target.toFile().exists()) {

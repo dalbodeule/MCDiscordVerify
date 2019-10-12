@@ -1,0 +1,7 @@
+{
+  "verifyKickMsg": "type \u0027!verify {verifyCode}\u0027 in discord channel \u0027verify\u0027\nverify is refused in {verifyTimeout} seconds.",
+  "verifySuccessMsgTitle": "Verify Success",
+  "verifySuccessMsgDesc": "Successfully verified. {nickname}",
+  "isNotRegistedCode": "{code} is not registed code",
+  "removeKickMsg": "You were kicked from the server because you were forced out of the guild or left yourself."
+}
