@@ -1,7 +1,8 @@
 {
-  "verifyKickMsg": "type \u0027!verify {verifyCode}\u0027 in discord channel \u0027verify\u0027\nverify is refused in {verifyTimeout} seconds.",
+  "prefix": "\u00266[MCDiscordVerify]\u0026r",
+  "verifyKickMsg": "\u0026etype \u0027!verify {verifyCode}\u0027 in discord channel \u0027verify\u0027\nverify is refused in {verifyTimeout} seconds.",
   "verifySuccessMsgTitle": "Verify Success",
   "verifySuccessMsgDesc": "Successfully verified. {nickname}",
-  "isNotRegistedCode": "{code} is not registed code",
-  "removeKickMsg": "You were kicked from the server because you were forced out of the guild or left yourself."
+  "isNotRegisteredCode": "{code} is not registered  code",
+  "removeKickMsg": "\u0026eYou were kicked from the server because you were forced out of the guild or left yourself."
 }

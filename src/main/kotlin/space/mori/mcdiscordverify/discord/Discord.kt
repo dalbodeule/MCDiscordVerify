@@ -16,6 +16,7 @@ import space.mori.mcdiscordverify.MCDiscordVerify.Companion.instance
 import space.mori.mcdiscordverify.config.Config
 import space.mori.mcdiscordverify.config.Language
 import space.mori.mcdiscordverify.config.UUIDtoDiscordID
+import space.mori.mcdiscordverify.util.getColoredString
 import java.awt.Color
 import java.util.*
 import javax.security.auth.login.LoginException
@@ -36,8 +37,9 @@ object Discord: Listener, ListenerAdapter() {
                  verifyCode = getRandomString(10)
             }
 
-            event.player.kickPlayer("[MCDiscordVerify] " + Language.config.verifyKickMsg
+            event.player.kickPlayer("${Language.config.prefix} ${Language.config.verifyKickMsg}"
                 .replace("{verifyCode}", verifyCode).replace("{verifyTimeout}", "${Config.config.verifyTimeout}")
+                .getColoredString
             )
             verifyUsers[verifyCode] = event.player.uniqueId
 
@@ -64,7 +66,7 @@ object Discord: Listener, ListenerAdapter() {
 
         if (uuid != null) {
             UUIDtoDiscordID.config.remove(uuid)
-            Bukkit.getPlayer(UUID.fromString(uuid))?.kickPlayer(Language.config.removeKickMsg)
+            Bukkit.getPlayer(UUID.fromString(uuid))?.kickPlayer("${Language.config.prefix} ${Language.config.removeKickMsg}".getColoredString)
             instance.logger.info("mcUUID: $uuid, discord: ${event.user.name} has leaved guild")
         }
     }
@@ -109,7 +111,7 @@ object Discord: Listener, ListenerAdapter() {
                                 UUIDtoDiscordID.config[verifyUsers[code]!!.toString()] = event.member!!.id
                                 verifyUsers.remove(code)
                             } else {
-                                event.channel.sendMessage(Language.config.isNotRegistedCode
+                                event.channel.sendMessage(Language.config.isNotRegisteredCode
                                     .replace("{code}", code)
                                 ).queue()
                             }

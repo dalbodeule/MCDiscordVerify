@@ -26,6 +26,7 @@ class MCDiscordVerify: JavaPlugin() {
         Config.load()
         UUIDtoDiscordID.load()
         Language.load()
+        Language.save()
 
         Discord.main()
 
