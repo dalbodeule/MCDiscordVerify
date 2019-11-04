@@ -6,4 +6,10 @@ depend:
 authors:
   - dalbodeule
 commands:
+  discord:
+    usage: "Usage: /<command>"
+    permission: mcdiscordverify.discord
 permissions:
+  mcdiscordverify.discord:
+    description: Allows discord command
+    default: true

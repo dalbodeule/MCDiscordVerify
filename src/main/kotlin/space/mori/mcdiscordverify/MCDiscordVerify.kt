@@ -5,6 +5,7 @@ import space.mori.mcdiscordverify.config.Config
 import space.mori.mcdiscordverify.config.Language
 import space.mori.mcdiscordverify.config.UUIDtoDiscordID
 import space.mori.mcdiscordverify.discord.Discord
+import space.mori.mcdiscordverify.command.Discord as DiscordCommand
 
 class MCDiscordVerify: JavaPlugin() {
     companion object {
@@ -28,7 +29,14 @@ class MCDiscordVerify: JavaPlugin() {
         Language.load()
         Language.save()
 
+        // jda server initialize
         Discord.main()
+
+        // command initialize
+        server.getPluginCommand("discord").run {
+            this.setExecutor(DiscordCommand)
+            this.setTabCompleter(DiscordCommand)
+        }
 
         server.pluginManager.registerEvents(Discord, this)
     }

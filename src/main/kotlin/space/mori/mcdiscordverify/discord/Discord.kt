@@ -25,7 +25,7 @@ import javax.security.auth.login.LoginException
 object Discord: Listener, ListenerAdapter() {
     private val verifyUsers: MutableMap<String, UUID> = mutableMapOf()
 
-    private lateinit var bot: JDA
+    lateinit var bot: JDA
     private lateinit var commands: Map<String, DiscordCommand>
 
     @EventHandler(priority = EventPriority.HIGHEST)
