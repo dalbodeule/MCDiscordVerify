@@ -16,6 +16,7 @@ import space.mori.mcdiscordverify.MCDiscordVerify.Companion.instance
 import space.mori.mcdiscordverify.config.Config
 import space.mori.mcdiscordverify.config.Language
 import space.mori.mcdiscordverify.config.UUIDtoDiscordID
+import space.mori.mcdiscordverify.config.getDiscordUser
 import space.mori.mcdiscordverify.util.getColoredString
 import java.awt.Color
 import java.util.*
@@ -48,6 +49,11 @@ object Discord: Listener, ListenerAdapter() {
                     verifyUsers.remove(verifyCode)
                 }
             }, 20L*Config.config.verifyTimeout)
+        } else {
+            if (event.player.getDiscordUser == null) {
+                event.player.kickPlayer("not valid verify information")
+                UUIDtoDiscordID.config.remove(event.player.uniqueId.toString())
+            }
         }
     }
 
