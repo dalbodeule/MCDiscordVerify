@@ -14,10 +14,17 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import space.mori.mcdiscordverify.MCDiscordVerify.Companion.instance
 import space.mori.mcdiscordverify.config.Config
-import space.mori.mcdiscordverify.config.Language
+import space.mori.mcdiscordverify.config.Config.discordChannel
+import space.mori.mcdiscordverify.config.Config.discordGuild
+import space.mori.mcdiscordverify.config.Config.discordToken
+import space.mori.mcdiscordverify.config.Config.verifyTimeout
+import space.mori.mcdiscordverify.config.Language.config
+import space.mori.mcdiscordverify.config.Language.prefix
+import space.mori.mcdiscordverify.config.Language.removeKickMsg
+import space.mori.mcdiscordverify.config.Language.verifyKickMsg
 import space.mori.mcdiscordverify.config.UUIDtoDiscordID
 import space.mori.mcdiscordverify.config.getDiscordUser
-import space.mori.mcdiscordverify.util.getColoredString
+import space.mori.mcdiscordverify.utils.getColored
 import java.awt.Color
 import java.util.*
 import javax.security.auth.login.LoginException
@@ -31,16 +38,17 @@ object Discord: Listener, ListenerAdapter() {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun onJoin(event: PlayerJoinEvent) {
-        if (UUIDtoDiscordID.config[event.player.uniqueId.toString()] == null) {
-            var verifyCode = verifyUsers.filterValues { it == event.player.uniqueId }.map { it.key }.getOrNull(0)
+        if (!UUIDtoDiscordID.isContainsUser(event.player.uniqueId.toString())) {
+            var verifyCode = verifyUsers.filterValues { it == event.player.uniqueId }.map { it.key }.firstOrNull()
 
             if (verifyCode == null) {
                  verifyCode = getRandomString(10)
             }
 
-            event.player.kickPlayer("${Language.config.prefix} ${Language.config.verifyKickMsg}"
-                .replace("{verifyCode}", verifyCode).replace("{verifyTimeout}", "${Config.config.verifyTimeout}")
-                .getColoredString
+            event.player.kickPlayer("$prefix $verifyKickMsg"
+                .replace("{verifyCode}", verifyCode)
+                .replace("{verifyTimeout}", "$verifyTimeout")
+                .getColored
             )
             verifyUsers[verifyCode] = event.player.uniqueId
 
@@ -51,8 +59,8 @@ object Discord: Listener, ListenerAdapter() {
             }, 20L*Config.config.verifyTimeout)
         } else {
             if (event.player.getDiscordUser == null) {
-                event.player.kickPlayer("not valid verify information")
-                UUIDtoDiscordID.config.remove(event.player.uniqueId.toString())
+                event.player.kickPlayer("$prefix $removeKickMsg")
+                UUIDtoDiscordID.removeUser(event.player.uniqueId.toString())
             }
         }
     }
@@ -68,18 +76,18 @@ object Discord: Listener, ListenerAdapter() {
     }
 
     override fun onGuildMemberLeave(event: GuildMemberLeaveEvent) {
-        val uuid = UUIDtoDiscordID.config.filterValues { it == event.user.id }.map { it.key }.getOrNull(0)
+        val uuid = UUIDtoDiscordID.config.filterValues { it == event.user.id }.map { it.key }.firstOrNull()
 
         if (uuid != null) {
-            UUIDtoDiscordID.config.remove(uuid)
-            Bukkit.getPlayer(UUID.fromString(uuid))?.kickPlayer("${Language.config.prefix} ${Language.config.removeKickMsg}".getColoredString)
+            UUIDtoDiscordID.removeUser(uuid)
+            Bukkit.getPlayer(UUID.fromString(uuid))?.kickPlayer("$prefix $removeKickMsg".getColored)
             instance.logger.info("mcUUID: $uuid, discord: ${event.user.name} has leaved guild")
         }
     }
 
     internal fun main() {
         try {
-            bot = JDABuilder(Config.config.discordToken)
+            bot = JDABuilder(discordToken)
                 .addEventListeners(Discord)
                 .setActivity(Activity.playing("Minecraft"))
                 .build()
@@ -94,18 +102,19 @@ object Discord: Listener, ListenerAdapter() {
                     override val name = "!verify"
                     override fun execute(event: MessageReceivedEvent) {
                         if (
-                            event.message.guild.id == Config.config.discordGuild.toString() &&
-                            event.channel.id == Config.config.discordChannel.toString()
+                            event.message.guild.id == discordGuild.toString() &&
+                            event.channel.id == discordChannel.toString()
                         ) {
                             val code = event.message.contentRaw.split(" ")[1]
 
                             if (code in verifyUsers.keys) {
                                 event.channel.sendMessage(run {
                                     val eb = EmbedBuilder()
-                                    eb.setTitle(Language.config.verifySuccessMsgTitle)
+                                    eb.setTitle(config.verifySuccessMsgTitle)
                                     eb.setColor(Color(0x88C959))
 
-                                    eb.setDescription(Language.config.verifySuccessMsgDesc
+                                    eb.setDescription(
+                                        config.verifySuccessMsgDesc
                                         .replace("{nickname}", Bukkit.getOfflinePlayer(verifyUsers[code]!!).name)
                                     )
 
@@ -114,17 +123,18 @@ object Discord: Listener, ListenerAdapter() {
                                     return@run eb.build()
                                 }).queue()
 
-                                UUIDtoDiscordID.config[verifyUsers[code]!!.toString()] = event.member!!.id
+                                UUIDtoDiscordID.addUser(verifyUsers[code]!!.toString(), event.member!!.id)
                                 verifyUsers.remove(code)
                             } else {
-                                event.channel.sendMessage(Language.config.isNotRegisteredCode
+                                event.channel.sendMessage(
+                                    config.isNotRegisteredCode
                                     .replace("{code}", code)
                                 ).queue()
                             }
                         }
                     }
                 }
-            ).associateBy { it.name }
+            ).associateBy { it.name }.toSortedMap()
         } catch (e: LoginException) {
             instance.logger.info(e.message)
             throw e

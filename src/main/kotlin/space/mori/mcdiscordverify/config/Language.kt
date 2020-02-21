@@ -1,21 +1,46 @@
 package space.mori.mcdiscordverify.config
 
+import space.mori.mcdiscordverify.utils.ConfigBase
+import space.mori.mcdiscordverify.utils.getTarget
 import java.io.File
 import java.nio.file.Paths
 
 object Language : ConfigBase<LanguageData>(
     config = LanguageData(),
     target = run {
-        val target = getTarget(Paths.get("lang", "lang_${Config.config.lang}.json"))
+        val target = getTarget(
+            Paths.get(
+                "lang",
+                "lang_${Config.lang}.json"
+            )
+        )
 
         return@run if (!File(target.toUri()).exists()) {
             getTarget(Paths.get("lang", "lang_en.json"))
         } else {
-            Config.config.lang = "en"
+            Config.lang = "en"
             target
         }
     }
-)
+) {
+    val prefix: String
+        get() = config.prefix
+
+    val verifyKickMsg: String
+        get() = config.verifyKickMsg
+
+    val verifySuccessMsgTitle: String
+        get() = config.verifySuccessMsgTitle
+
+    val verifySuccessMsgDesc: String
+        get() = config.verifySuccessMsgDesc
+
+    val isNotRegisteredCode: String
+        get() = config.isNotRegisteredCode
+
+    val removeKickMsg: String
+        get() = config.removeKickMsg
+}
 
 data class LanguageData(
     val prefix: String = "&6[MCDiscordVerify]&r",

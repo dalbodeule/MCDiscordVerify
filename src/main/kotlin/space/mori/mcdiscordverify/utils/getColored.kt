@@ -1,6 +1,6 @@
-package space.mori.mcdiscordverify.util
+package space.mori.mcdiscordverify.utils
 
 import org.bukkit.ChatColor
 
-val String.getColoredString: String
+val String.getColored: String
     get() = ChatColor.translateAlternateColorCodes('&', this)

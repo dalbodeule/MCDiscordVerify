@@ -1,8 +1,6 @@
-package space.mori.mcdiscordverify.config
+package space.mori.mcdiscordverify.utils
 
 import space.mori.mcdiscordverify.MCDiscordVerify.Companion.instance
-import space.mori.mcdiscordverify.util.parseJSON
-import space.mori.mcdiscordverify.util.serializeJSON
 import java.nio.file.Files
 import java.nio.file.Path
 

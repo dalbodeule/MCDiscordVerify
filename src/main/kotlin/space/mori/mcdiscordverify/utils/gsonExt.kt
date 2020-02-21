@@ -1,4 +1,4 @@
-package space.mori.mcdiscordverify.util
+package space.mori.mcdiscordverify.utils
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
