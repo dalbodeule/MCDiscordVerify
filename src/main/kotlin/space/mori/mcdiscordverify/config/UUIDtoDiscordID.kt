@@ -1,7 +1,7 @@
 package space.mori.mcdiscordverify.config
 
 import net.dv8tion.jda.api.entities.User
-import org.bukkit.entity.Player
+import net.md_5.bungee.api.connection.ProxiedPlayer
 import space.mori.mcdiscordverify.discord.Discord
 import space.mori.mcdiscordverify.utils.ConfigBase
 import space.mori.mcdiscordverify.utils.getTarget
@@ -31,7 +31,7 @@ object UUIDtoDiscordID: ConfigBase<MutableMap<String, String>>(
     }
 }
 
-val Player.getDiscordUser: User?
+val ProxiedPlayer.getDiscordUser: User?
     get () {
         val discordId = UUIDtoDiscordID.getUser(this.uniqueId.toString())
 

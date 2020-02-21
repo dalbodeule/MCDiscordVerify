@@ -16,17 +16,14 @@ sourceCompatibility = 1.8
 repositories {
     mavenCentral()
     jcenter()
-    maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
-    }
+    maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    compileOnly group: 'org.spigotmc', name: 'spigot-api', version: '1.12-R0.1-SNAPSHOT'
+    compileOnly "net.md-5:bungeecord-api:1.14-SNAPSHOT"
     implementation ('net.dv8tion:JDA:4.0.0_50') {
         exclude module: 'opus-java'
     }

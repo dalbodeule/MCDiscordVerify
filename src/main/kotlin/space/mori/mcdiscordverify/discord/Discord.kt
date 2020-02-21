@@ -7,11 +7,11 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import org.bukkit.Bukkit
-import org.bukkit.event.EventHandler
-import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
-import org.bukkit.event.player.PlayerJoinEvent
+import net.md_5.bungee.api.chat.TextComponent
+import net.md_5.bungee.api.event.PostLoginEvent
+import net.md_5.bungee.api.plugin.Listener
+import net.md_5.bungee.event.EventHandler
+import net.md_5.bungee.event.EventPriority
 import space.mori.mcdiscordverify.MCDiscordVerify.Companion.instance
 import space.mori.mcdiscordverify.config.Config
 import space.mori.mcdiscordverify.config.Config.discordChannel
@@ -27,6 +27,7 @@ import space.mori.mcdiscordverify.config.getDiscordUser
 import space.mori.mcdiscordverify.utils.getColored
 import java.awt.Color
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.security.auth.login.LoginException
 
 
@@ -37,7 +38,7 @@ object Discord: Listener, ListenerAdapter() {
     private lateinit var commands: Map<String, DiscordCommand>
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    internal fun onJoin(event: PlayerJoinEvent) {
+    internal fun onJoin(event: PostLoginEvent) {
         if (!UUIDtoDiscordID.isContainsUser(event.player.uniqueId.toString())) {
             var verifyCode = verifyUsers.filterValues { it == event.player.uniqueId }.map { it.key }.firstOrNull()
 
@@ -45,21 +46,24 @@ object Discord: Listener, ListenerAdapter() {
                  verifyCode = getRandomString(10)
             }
 
-            event.player.kickPlayer("$prefix $verifyKickMsg"
-                .replace("{verifyCode}", verifyCode)
-                .replace("{verifyTimeout}", "$verifyTimeout")
-                .getColored
+            event.player.disconnect(
+                TextComponent(
+                    "$prefix $verifyKickMsg"
+                        .replace("{verifyCode}", verifyCode)
+                        .replace("{verifyTimeout}", "$verifyTimeout")
+                        .getColored
+                )
             )
             verifyUsers[verifyCode] = event.player.uniqueId
 
-            instance.server.scheduler.runTaskLater(instance, {
+            instance.proxy.scheduler.schedule(instance, Runnable {
                 if (verifyUsers[verifyCode] != null) {
                     verifyUsers.remove(verifyCode)
                 }
-            }, 20L*Config.config.verifyTimeout)
+            }, Config.config.verifyTimeout*0L, TimeUnit.SECONDS)
         } else {
             if (event.player.getDiscordUser == null) {
-                event.player.kickPlayer("$prefix $removeKickMsg")
+                event.player.disconnect(TextComponent("$prefix $removeKickMsg"))
                 UUIDtoDiscordID.removeUser(event.player.uniqueId.toString())
             }
         }
@@ -80,7 +84,9 @@ object Discord: Listener, ListenerAdapter() {
 
         if (uuid != null) {
             UUIDtoDiscordID.removeUser(uuid)
-            Bukkit.getPlayer(UUID.fromString(uuid))?.kickPlayer("$prefix $removeKickMsg".getColored)
+            instance.proxy.getPlayer(UUID.fromString(uuid))?.disconnect(
+                TextComponent("$prefix $removeKickMsg".getColored)
+            )
             instance.logger.info("mcUUID: $uuid, discord: ${event.user.name} has leaved guild")
         }
     }
@@ -115,7 +121,7 @@ object Discord: Listener, ListenerAdapter() {
 
                                     eb.setDescription(
                                         config.verifySuccessMsgDesc
-                                        .replace("{nickname}", Bukkit.getOfflinePlayer(verifyUsers[code]!!).name)
+                                        .replace("{nickname}", verifyUsers[code]!!.toString())
                                     )
 
                                     eb.setImage("https://minotar.net/helm/${verifyUsers[code]!!}")
