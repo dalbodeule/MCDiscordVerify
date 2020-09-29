@@ -5,14 +5,14 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 open class ConfigBase<T: Any>(
-    open var config: T,
+    open var data: T,
     private val target: Path = instance.dataFolder.toPath().resolveSibling("dummy.json")
 ) {
     internal fun load() {
         if (this.target.toFile().exists()) {
-            config = parseJSON(
+            data = parseJSON(
                 Files.readAllBytes(this.target).toString(Charsets.UTF_8),
-                config::class.java
+                data::class.java
             )
         }
     }
@@ -23,7 +23,7 @@ open class ConfigBase<T: Any>(
             Files.createFile(this.target)
         }
 
-        Files.write(this.target, config.serializeJSON().toByteArray())
+        Files.write(this.target, data.serializeJSON().toByteArray())
     }
 }
 

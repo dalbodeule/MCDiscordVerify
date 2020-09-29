@@ -4,32 +4,32 @@ import space.mori.mcdiscordverify.utils.ConfigBase
 import space.mori.mcdiscordverify.utils.getTarget
 
 object Config : ConfigBase<ConfigData>(
-    config = ConfigData(),
+    data = ConfigData(),
     target = getTarget("config.json")
 ) {
     var debug: Boolean
-        get() = config.debug
-        set(value) { config.debug = value }
+        get() = data.debug
+        set(value) { data.debug = value }
 
     var discordToken: String
-        get() = config.discordToken
-        set(value) { config.discordToken = value }
+        get() = data.discordToken
+        set(value) { data.discordToken = value }
 
     var discordGuild: Number
-        get() = config.discordGuild
-        set(value) { config.discordGuild = value }
+        get() = data.discordGuild
+        set(value) { data.discordGuild = value }
 
     var discordChannel: Number
-        get() = config.discordChannel
-        set(value) { config.discordChannel = value }
+        get() = data.discordChannel
+        set(value) { data.discordChannel = value }
 
     var verifyTimeout: Int
-        get() = config.verifyTimeout
-        set(value) { config.verifyTimeout = value }
+        get() = data.verifyTimeout
+        set(value) { data.verifyTimeout = value }
 
     var lang: String
-        get() = config.lang
-        set(value) { config.lang = value }
+        get() = data.lang
+        set(value) { data.lang = value }
 }
 
 data class ConfigData(

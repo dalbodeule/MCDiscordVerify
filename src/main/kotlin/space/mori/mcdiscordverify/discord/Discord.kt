@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.entities.Activity
+import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -18,12 +19,13 @@ import space.mori.mcdiscordverify.config.Config.discordChannel
 import space.mori.mcdiscordverify.config.Config.discordGuild
 import space.mori.mcdiscordverify.config.Config.discordToken
 import space.mori.mcdiscordverify.config.Config.verifyTimeout
-import space.mori.mcdiscordverify.config.Language.config
+import space.mori.mcdiscordverify.config.Language.isNotRegisteredCode
 import space.mori.mcdiscordverify.config.Language.prefix
 import space.mori.mcdiscordverify.config.Language.removeKickMsg
 import space.mori.mcdiscordverify.config.Language.verifyKickMsg
+import space.mori.mcdiscordverify.config.Language.verifySuccessMsgDesc
+import space.mori.mcdiscordverify.config.Language.verifySuccessMsgTitle
 import space.mori.mcdiscordverify.config.UUIDtoDiscordID
-import space.mori.mcdiscordverify.config.getDiscordUser
 import space.mori.mcdiscordverify.utils.getColored
 import java.awt.Color
 import java.util.*
@@ -34,7 +36,52 @@ object Discord: Listener, ListenerAdapter() {
     private val verifyUsers: MutableMap<String, UUID> = mutableMapOf()
 
     lateinit var bot: JDA
-    private lateinit var commands: Map<String, DiscordCommand>
+    var guild: Guild? = null
+
+    private val commands = listOf(
+        object : DiscordCommand {
+            override val name = "!ping"
+            override fun execute(event: MessageReceivedEvent) {
+                event.channel.sendMessage("Pong!").queue()
+            }
+        },
+        object : DiscordCommand {
+            override val name = "!verify"
+            override fun execute(event: MessageReceivedEvent) {
+                if (
+                    event.message.guild.id == discordGuild.toString() &&
+                    event.channel.id == discordChannel.toString()
+                ) {
+                    val code = event.message.contentRaw.split(" ")[1]
+
+                    if (code in verifyUsers.keys) {
+                        event.channel.sendMessage(run {
+                            val eb = EmbedBuilder()
+                            eb.setTitle(verifySuccessMsgTitle)
+                            eb.setColor(Color(0x88C959))
+
+                            eb.setDescription(
+                                verifySuccessMsgDesc
+                                    .replace("{nickname}", Bukkit.getOfflinePlayer(verifyUsers[code]!!).name!!)
+                            )
+
+                            eb.setImage("https://minotar.net/helm/${verifyUsers[code]!!}")
+
+                            return@run eb.build()
+                        }).queue()
+
+                        UUIDtoDiscordID.addUser(verifyUsers[code]!!.toString(), event.member!!.id)
+                        verifyUsers.remove(code)
+                    } else {
+                        event.channel.sendMessage(
+                            isNotRegisteredCode
+                                .replace("{code}", code)
+                        ).queue()
+                    }
+                }
+            }
+        }
+    ).associateBy { it.name }.toSortedMap()
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun onJoin(event: PlayerJoinEvent) {
@@ -52,13 +99,13 @@ object Discord: Listener, ListenerAdapter() {
             )
             verifyUsers[verifyCode] = event.player.uniqueId
 
-            instance.server.scheduler.runTaskLater(instance, {
+            instance.server.scheduler.runTaskLater(instance, Runnable {
                 if (verifyUsers[verifyCode] != null) {
                     verifyUsers.remove(verifyCode)
                 }
-            }, 20L*Config.config.verifyTimeout)
+            }, 20L * Config.verifyTimeout)
         } else {
-            if (event.player.getDiscordUser == null) {
+            if (UUIDtoDiscordID.getUser(event.player.uniqueId.toString()) == null) {
                 event.player.kickPlayer("$prefix $removeKickMsg")
                 UUIDtoDiscordID.removeUser(event.player.uniqueId.toString())
             }
@@ -76,7 +123,7 @@ object Discord: Listener, ListenerAdapter() {
     }
 
     override fun onGuildMemberLeave(event: GuildMemberLeaveEvent) {
-        val uuid = UUIDtoDiscordID.config.filterValues { it == event.user.id }.map { it.key }.firstOrNull()
+        val uuid = UUIDtoDiscordID.getUserWithDiscordID(event.user.id)
 
         if (uuid != null) {
             UUIDtoDiscordID.removeUser(uuid)
@@ -90,59 +137,30 @@ object Discord: Listener, ListenerAdapter() {
             bot = JDABuilder(discordToken)
                 .addEventListeners(Discord)
                 .setActivity(Activity.playing("Minecraft"))
-                .build()
-            commands = listOf(
-                object : DiscordCommand {
-                    override val name = "!ping"
-                    override fun execute(event: MessageReceivedEvent) {
-                        event.channel.sendMessage("Pong!").queue()
-                    }
-                },
-                object : DiscordCommand {
-                    override val name = "!verify"
-                    override fun execute(event: MessageReceivedEvent) {
-                        if (
-                            event.message.guild.id == discordGuild.toString() &&
-                            event.channel.id == discordChannel.toString()
-                        ) {
-                            val code = event.message.contentRaw.split(" ")[1]
+                .build().awaitReady()
 
-                            if (code in verifyUsers.keys) {
-                                event.channel.sendMessage(run {
-                                    val eb = EmbedBuilder()
-                                    eb.setTitle(config.verifySuccessMsgTitle)
-                                    eb.setColor(Color(0x88C959))
+            guild = bot.getGuildById(discordGuild.toLong())
 
-                                    eb.setDescription(
-                                        config.verifySuccessMsgDesc
-                                        .replace("{nickname}", Bukkit.getOfflinePlayer(verifyUsers[code]!!).name)
-                                    )
+            if (guild == null) {
+                instance.logger.info("$prefix Guild is not found! plugin disabled.")
+                instance.pluginLoader.disablePlugin(instance)
+            }
 
-                                    eb.setImage("https://minotar.net/helm/${verifyUsers[code]!!}")
+        } catch (ex: Exception) {
+            instance.logger.info(ex.message)
 
-                                    return@run eb.build()
-                                }).queue()
+            instance.pluginLoader.disablePlugin(instance)
 
-                                UUIDtoDiscordID.addUser(verifyUsers[code]!!.toString(), event.member!!.id)
-                                verifyUsers.remove(code)
-                            } else {
-                                event.channel.sendMessage(
-                                    config.isNotRegisteredCode
-                                    .replace("{code}", code)
-                                ).queue()
-                            }
-                        }
-                    }
-                }
-            ).associateBy { it.name }.toSortedMap()
-        } catch (e: LoginException) {
-            instance.logger.info(e.message)
-            throw e
+            throw ex
         }
     }
 
     internal fun disable() {
-        bot.shutdown()
+        try {
+            bot.shutdown()
+        } catch (e: UninitializedPropertyAccessException) {
+
+        }
     }
 
     interface DiscordCommand {

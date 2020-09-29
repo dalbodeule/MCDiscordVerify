@@ -33,9 +33,9 @@ class MCDiscordVerify: JavaPlugin() {
         Discord.main()
 
         // command initialize
-        server.getPluginCommand("discord").run {
+        server.getPluginCommand("discord")?.run {
             this.setExecutor(DiscordCommand)
-            this.setTabCompleter(DiscordCommand)
+            this.tabCompleter = DiscordCommand
         }
 
         server.pluginManager.registerEvents(Discord, this)

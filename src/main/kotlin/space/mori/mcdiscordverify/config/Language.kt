@@ -6,7 +6,7 @@ import java.io.File
 import java.nio.file.Paths
 
 object Language : ConfigBase<LanguageData>(
-    config = LanguageData(),
+    data = LanguageData(),
     target = run {
         val target = getTarget(
             Paths.get(
@@ -16,30 +16,30 @@ object Language : ConfigBase<LanguageData>(
         )
 
         return@run if (!File(target.toUri()).exists()) {
+            Config.lang = "en"
             getTarget(Paths.get("lang", "lang_en.json"))
         } else {
-            Config.lang = "en"
             target
         }
     }
 ) {
     val prefix: String
-        get() = config.prefix
+        get() = data.prefix
 
     val verifyKickMsg: String
-        get() = config.verifyKickMsg
+        get() = data.verifyKickMsg
 
     val verifySuccessMsgTitle: String
-        get() = config.verifySuccessMsgTitle
+        get() = data.verifySuccessMsgTitle
 
     val verifySuccessMsgDesc: String
-        get() = config.verifySuccessMsgDesc
+        get() = data.verifySuccessMsgDesc
 
     val isNotRegisteredCode: String
-        get() = config.isNotRegisteredCode
+        get() = data.isNotRegisteredCode
 
     val removeKickMsg: String
-        get() = config.removeKickMsg
+        get() = data.removeKickMsg
 }
 
 data class LanguageData(
