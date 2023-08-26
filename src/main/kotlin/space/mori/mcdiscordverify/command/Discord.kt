@@ -4,9 +4,7 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import space.mori.mcdiscordverify.config.Language.prefix
-import space.mori.mcdiscordverify.config.UUIDtoDiscordID
 import space.mori.mcdiscordverify.config.getDiscordUser
-import space.mori.mcdiscordverify.discord.Discord.bot
 import space.mori.mcdiscordverify.discord.Discord.guild
 import space.mori.mcdiscordverify.utils.CommandBase
 import space.mori.mcdiscordverify.utils.SubCommand
@@ -26,7 +24,7 @@ object Discord: CommandBase(
                 if (member != null) {
                     sender.sendColorMessage("$prefix Your discord account is &9" +
                         (if (member.nickname != null) member.nickname else member.user.name) +
-                        "&r (&6@${member.user.asTag}&r)")
+                        "&r (&6@${member.user.name}&r)")
                 } else {
                     sender.sendColorMessage("$prefix Your discord account is not found!")
                 }
