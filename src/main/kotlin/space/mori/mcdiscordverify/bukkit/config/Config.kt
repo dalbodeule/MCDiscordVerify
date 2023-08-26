@@ -1,7 +1,4 @@
-package space.mori.mcdiscordverify.config
-
-import space.mori.mcdiscordverify.utils.ConfigBase
-import space.mori.mcdiscordverify.utils.getTarget
+package space.mori.mcdiscordverify.bukkit.config
 
 object Config : ConfigBase<ConfigData>(
     data = ConfigData(),

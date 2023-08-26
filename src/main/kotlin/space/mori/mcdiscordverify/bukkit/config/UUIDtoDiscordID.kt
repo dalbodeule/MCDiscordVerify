@@ -1,12 +1,8 @@
-package space.mori.mcdiscordverify.config
+package space.mori.mcdiscordverify.bukkit.config
 
 import net.dv8tion.jda.api.entities.User
 import org.bukkit.entity.Player
-import space.mori.mcdiscordverify.MCDiscordVerify.Companion.instance
-import space.mori.mcdiscordverify.discord.Discord.bot
-import space.mori.mcdiscordverify.utils.ConfigBase
-import space.mori.mcdiscordverify.utils.getTarget
-import java.util.*
+import space.mori.mcdiscordverify.bukkit.discord.Discord.bot
 
 object UUIDtoDiscordID: ConfigBase<MutableMap<String, String>>(
     data = mutableMapOf(),

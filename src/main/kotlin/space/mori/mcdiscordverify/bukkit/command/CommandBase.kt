@@ -1,4 +1,4 @@
-package space.mori.mcdiscordverify.utils
+package space.mori.mcdiscordverify.bukkit.command
 
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

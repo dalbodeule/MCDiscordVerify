@@ -1,7 +1,5 @@
-package space.mori.mcdiscordverify.config
+package space.mori.mcdiscordverify.bukkit.config
 
-import space.mori.mcdiscordverify.utils.ConfigBase
-import space.mori.mcdiscordverify.utils.getTarget
 import java.io.File
 import java.nio.file.Paths
 

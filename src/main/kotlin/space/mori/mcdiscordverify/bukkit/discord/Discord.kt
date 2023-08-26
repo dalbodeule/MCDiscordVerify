@@ -1,4 +1,4 @@
-package space.mori.mcdiscordverify.discord
+package space.mori.mcdiscordverify.bukkit.discord
 
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
@@ -16,19 +15,19 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
-import space.mori.mcdiscordverify.MCDiscordVerify.Companion.instance
-import space.mori.mcdiscordverify.config.Config
-import space.mori.mcdiscordverify.config.Config.discordChannel
-import space.mori.mcdiscordverify.config.Config.discordGuild
-import space.mori.mcdiscordverify.config.Config.discordToken
-import space.mori.mcdiscordverify.config.Config.verifyTimeout
-import space.mori.mcdiscordverify.config.Language.isNotRegisteredCode
-import space.mori.mcdiscordverify.config.Language.prefix
-import space.mori.mcdiscordverify.config.Language.removeKickMsg
-import space.mori.mcdiscordverify.config.Language.verifyKickMsg
-import space.mori.mcdiscordverify.config.Language.verifySuccessMsgDesc
-import space.mori.mcdiscordverify.config.Language.verifySuccessMsgTitle
-import space.mori.mcdiscordverify.config.UUIDtoDiscordID
+import space.mori.mcdiscordverify.bukkit.MCDiscordVerify.Companion.instance
+import space.mori.mcdiscordverify.bukkit.config.Config
+import space.mori.mcdiscordverify.bukkit.config.Config.discordChannel
+import space.mori.mcdiscordverify.bukkit.config.Config.discordGuild
+import space.mori.mcdiscordverify.bukkit.config.Config.discordToken
+import space.mori.mcdiscordverify.bukkit.config.Config.verifyTimeout
+import space.mori.mcdiscordverify.bukkit.config.Language.isNotRegisteredCode
+import space.mori.mcdiscordverify.bukkit.config.Language.prefix
+import space.mori.mcdiscordverify.bukkit.config.Language.removeKickMsg
+import space.mori.mcdiscordverify.bukkit.config.Language.verifyKickMsg
+import space.mori.mcdiscordverify.bukkit.config.Language.verifySuccessMsgDesc
+import space.mori.mcdiscordverify.bukkit.config.Language.verifySuccessMsgTitle
+import space.mori.mcdiscordverify.bukkit.config.UUIDtoDiscordID
 import space.mori.mcdiscordverify.utils.getColored
 import java.awt.Color
 import java.util.*
@@ -116,7 +115,7 @@ object Discord: Listener, ListenerAdapter() {
     }
 
     internal fun main() {
-        val thread = Thread() {
+        val thread = Thread {
             try {
                 bot = JDABuilder.createDefault(discordToken)
                     .addEventListeners(Discord)

@@ -1,13 +1,11 @@
-package space.mori.mcdiscordverify.command
+package space.mori.mcdiscordverify.bukkit.command
 
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import space.mori.mcdiscordverify.config.Language.prefix
-import space.mori.mcdiscordverify.config.getDiscordUser
-import space.mori.mcdiscordverify.discord.Discord.guild
-import space.mori.mcdiscordverify.utils.CommandBase
-import space.mori.mcdiscordverify.utils.SubCommand
+import space.mori.mcdiscordverify.bungee.config.Language.prefix
+import space.mori.mcdiscordverify.bukkit.config.getDiscordUser
+import space.mori.mcdiscordverify.bukkit.discord.Discord.guild
 import space.mori.mcdiscordverify.utils.sendColorMessage
 
 object Discord: CommandBase(
