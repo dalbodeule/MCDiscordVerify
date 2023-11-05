@@ -1,8 +1,8 @@
 package space.mori.mcdiscordverify.bukkit
 
 import org.bukkit.plugin.java.JavaPlugin
-import space.mori.mcdiscordverify.bungee.config.Config
-import space.mori.mcdiscordverify.bungee.config.Language
+import space.mori.mcdiscordverify.bukkit.config.Config
+import space.mori.mcdiscordverify.bukkit.config.Language
 import space.mori.mcdiscordverify.bukkit.config.UUIDtoDiscordID
 import space.mori.mcdiscordverify.bukkit.discord.Discord
 import space.mori.mcdiscordverify.bukkit.command.Discord as DiscordCommand

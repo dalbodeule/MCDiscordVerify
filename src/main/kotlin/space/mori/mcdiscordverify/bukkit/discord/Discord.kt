@@ -126,8 +126,8 @@ object Discord: Listener, ListenerAdapter() {
 
                 guild?.updateCommands()?.addCommands(
                     Commands.slash("ping", "Pong!"),
-                    Commands.slash("verify", "")
-                        .addOption(OptionType.STRING, "code", "")
+                    Commands.slash("verify", "verify minecraft user!")
+                        .addOption(OptionType.STRING, "code", "verify code")
                 )?.queue()
 
                 if (guild == null) {

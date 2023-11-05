@@ -1,7 +1,7 @@
 name: MCDiscordVerify
 version: @version@
 main: space.mori.mcdiscordverify.bukkit.MCDiscordVerify
-api-version: 1.17
+api-version: 1.18
 authors:
   - dalbodeule
 commands:
