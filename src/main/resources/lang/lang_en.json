@@ -4,5 +4,9 @@
   "verifySuccessMsgTitle": "Verify Success",
   "verifySuccessMsgDesc": "Successfully verified. {nickname}",
   "isNotRegisteredCode": "{code} is not registered  code",
-  "removeKickMsg": "\u0026eYou were kicked from the server because you were forced out of the guild or left yourself."
+  "removeKickMsg": "\u0026eYou were kicked from the server because you were forced out of the guild or left yourself.",
+  "pingCmdDesc": "Pong!",
+  "pingCmdMsg": "Pong! System is operated!",
+  "verifyCmdDesc": "verify your minecraft accounts.",
+  "verifyCmdOptCode": "Can you get verify code on first connects."
 }

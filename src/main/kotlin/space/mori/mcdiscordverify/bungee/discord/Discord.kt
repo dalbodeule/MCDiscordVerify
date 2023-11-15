@@ -22,8 +22,12 @@ import space.mori.mcdiscordverify.bungee.config.Config.discordGuild
 import space.mori.mcdiscordverify.bungee.config.Config.discordToken
 import space.mori.mcdiscordverify.bungee.config.Config.verifyTimeout
 import space.mori.mcdiscordverify.bungee.config.Language
+import space.mori.mcdiscordverify.bungee.config.Language.pingCmdDesc
+import space.mori.mcdiscordverify.bungee.config.Language.pingCmdMsg
 import space.mori.mcdiscordverify.bungee.config.Language.prefix
 import space.mori.mcdiscordverify.bungee.config.Language.removeKickMsg
+import space.mori.mcdiscordverify.bungee.config.Language.verifyCmdDesc
+import space.mori.mcdiscordverify.bungee.config.Language.verifyCmdOptCode
 import space.mori.mcdiscordverify.bungee.config.Language.verifyKickMsg
 import space.mori.mcdiscordverify.bungee.config.UUIDtoDiscordID
 import space.mori.mcdiscordverify.bungee.config.getDiscordUser
@@ -84,7 +88,7 @@ object Discord: Listener, ListenerAdapter() {
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         when (event.name) {
-            "ping" -> event.reply("Pong!").queue()
+            "ping" -> event.reply(pingCmdMsg).queue()
             "verify" -> {
                 if (
                     event.guild?.id == discordGuild.toString() &&
@@ -129,9 +133,9 @@ object Discord: Listener, ListenerAdapter() {
                 val guild = bot.getGuildById(discordGuild.toLong())
 
                 guild?.updateCommands()?.addCommands(
-                    Commands.slash("ping", "Pong!"),
-                    Commands.slash("verify", "")
-                        .addOption(OptionType.STRING, "code", "")
+                    Commands.slash("ping", pingCmdDesc),
+                    Commands.slash("verify", verifyCmdDesc)
+                        .addOption(OptionType.STRING, "code", verifyCmdOptCode)
                 )?.queue()
 
                 if (guild == null) {

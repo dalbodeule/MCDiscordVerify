@@ -22,8 +22,12 @@ import space.mori.mcdiscordverify.bukkit.config.Config.discordGuild
 import space.mori.mcdiscordverify.bukkit.config.Config.discordToken
 import space.mori.mcdiscordverify.bukkit.config.Config.verifyTimeout
 import space.mori.mcdiscordverify.bukkit.config.Language.isNotRegisteredCode
+import space.mori.mcdiscordverify.bukkit.config.Language.pingCmdDesc
+import space.mori.mcdiscordverify.bukkit.config.Language.pingCmdMsg
 import space.mori.mcdiscordverify.bukkit.config.Language.prefix
 import space.mori.mcdiscordverify.bukkit.config.Language.removeKickMsg
+import space.mori.mcdiscordverify.bukkit.config.Language.verifyCmdDesc
+import space.mori.mcdiscordverify.bukkit.config.Language.verifyCmdOptCode
 import space.mori.mcdiscordverify.bukkit.config.Language.verifyKickMsg
 import space.mori.mcdiscordverify.bukkit.config.Language.verifySuccessMsgDesc
 import space.mori.mcdiscordverify.bukkit.config.Language.verifySuccessMsgTitle
@@ -80,13 +84,13 @@ object Discord: Listener, ListenerAdapter() {
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         when (event.name) {
-            "ping" -> event.reply("Pong!").queue()
+            "ping" -> event.reply(pingCmdMsg).queue()
             "verify" -> {
                 if (
                     event.guild?.id == discordGuild.toString() &&
                     event.channel.id == discordChannel.toString()
                 ) {
-                    val code = event.getOption("code")!!.asString
+                    val code = event.getOption("code")?.asString ?: ""
 
                     if (code in verifyUsers.keys) {
                         val eb = EmbedBuilder()
@@ -125,9 +129,9 @@ object Discord: Listener, ListenerAdapter() {
                 guild = bot.getGuildById(discordGuild.toLong())
 
                 guild?.updateCommands()?.addCommands(
-                    Commands.slash("ping", "Pong!"),
-                    Commands.slash("verify", "verify minecraft user!")
-                        .addOption(OptionType.STRING, "code", "verify code")
+                    Commands.slash("ping", pingCmdDesc),
+                    Commands.slash("verify", verifyCmdDesc)
+                        .addOption(OptionType.STRING, "code", verifyCmdOptCode)
                 )?.queue()
 
                 if (guild == null) {

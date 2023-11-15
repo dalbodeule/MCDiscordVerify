@@ -1,5 +1,7 @@
 package space.mori.mcdiscordverify.bukkit.config
 
+import space.mori.mcdiscordverify.common.config.ConfigData
+
 object Config : ConfigBase<ConfigData>(
     data = ConfigData(),
     target = getTarget("config.json")
@@ -28,12 +30,3 @@ object Config : ConfigBase<ConfigData>(
         get() = data.lang
         set(value) { data.lang = value }
 }
-
-data class ConfigData(
-    var debug: Boolean = false,
-    var discordToken: String = "",
-    var discordGuild: Number = 0,
-    var discordChannel: Number = 0,
-    var verifyTimeout: Int = 120,
-    var lang: String = "en"
-)

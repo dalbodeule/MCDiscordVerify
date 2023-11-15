@@ -1,5 +1,6 @@
 package space.mori.mcdiscordverify.bungee.config
 
+import space.mori.mcdiscordverify.common.config.LanguageData
 import java.io.File
 import java.nio.file.Paths
 
@@ -38,13 +39,16 @@ object Language : ConfigBase<LanguageData>(
 
     val removeKickMsg: String
         get() = data.removeKickMsg
-}
 
-data class LanguageData(
-    val prefix: String = "&6[MCDiscordVerify]&r",
-    val verifyKickMsg: String = "&etype '!verify {verifyCode}' in discord channel 'verify'\nverify is refused in {verifyTimeout} seconds.",
-    val verifySuccessMsgTitle: String = "Verify Success",
-    val verifySuccessMsgDesc: String = "Successfully verified. {nickname}",
-    val isNotRegisteredCode: String = "{code} is not registered  code",
-    val removeKickMsg: String = "&eYou were kicked from the server because you were forced out of the guild or left yourself."
-)
+    val pingCmdDesc: String
+        get() = Language.data.pingCmdDesc
+
+    val pingCmdMsg: String
+        get() = Language.data.pingCmdMsg
+
+    val verifyCmdDesc: String
+        get() = Language.data.verifyCmdDesc
+
+    val verifyCmdOptCode: String
+        get() = Language.data.verifyCmdOptCode
+}

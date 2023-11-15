@@ -4,5 +4,9 @@
   "verifySuccessMsgTitle": "인증 성공!",
   "verifySuccessMsgDesc": "{nickname} 님의 인증이 성공했습니다.",
   "isNotRegistedCode": "{code} 는 등록되지 않은 인증코드입니다.",
-  "removeKickMsg": "\u0026e당신은 길드에서 강퇴당했거나, 스스로 나갔습니다. 인증정보를 삭제합니다."
+  "removeKickMsg": "\u0026e당신은 길드에서 강퇴당했거나, 스스로 나갔습니다. 인증정보를 삭제합니다.",
+  "pingCmdDesc": "Pong!",
+  "pingCmdMsg": "Pong! 시스템이 동작중입니다.",
+  "verifyCmdDesc": "당신의 마인크래프트 계정을 인증합니다.",
+  "verifyCmdOptCode": "서버에 접속하고 필요한 정보를 받으세요!"
 }
