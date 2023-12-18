@@ -4,6 +4,8 @@ main: space.mori.mcdiscordverify.bukkit.MCDiscordVerify
 api-version: 1.18
 authors:
   - dalbodeule
+depend:
+  - kotlin-stdlib
 commands:
   discord:
     permission: mcdiscordverify.discord
