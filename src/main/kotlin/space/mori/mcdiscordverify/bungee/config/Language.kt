@@ -41,14 +41,32 @@ object Language : ConfigBase<LanguageData>(
         get() = data.removeKickMsg
 
     val pingCmdDesc: String
-        get() = Language.data.pingCmdDesc
+        get() = data.pingCmdDesc
 
     val pingCmdMsg: String
-        get() = Language.data.pingCmdMsg
+        get() = data.pingCmdMsg
 
     val verifyCmdDesc: String
-        get() = Language.data.verifyCmdDesc
+        get() = data.verifyCmdDesc
 
     val verifyCmdOptCode: String
-        get() = Language.data.verifyCmdOptCode
+        get() = data.verifyCmdOptCode
+
+    val roleCmdDesc: String
+        get() = data.roleCmdDesc
+
+    val roleCmdMsg: String
+        get() = data.roleCmdMsg
+
+    val roleCmdOptDesc: String
+        get() = data.roleCmdOptDesc
+
+    val serverCmdDesc: String
+        get() = data.serverCmdDesc
+
+    val serverCmdMsg: String
+        get() = data.serverCmdMsg
+
+    val serverCmdOptDesc: String
+        get() = data.serverCmdOptDesc
 }

@@ -1,5 +1,6 @@
 package space.mori.mcdiscordverify.bukkit.config
 
+import space.mori.mcdiscordverify.bungee.config.Language
 import space.mori.mcdiscordverify.common.config.LanguageData
 import java.io.File
 import java.nio.file.Paths
@@ -51,4 +52,23 @@ object Language : ConfigBase<LanguageData>(
 
     val verifyCmdOptCode: String
         get() = data.verifyCmdOptCode
+
+
+    val roleCmdDesc: String
+        get() = data.roleCmdDesc
+
+    val roleCmdMsg: String
+        get() = data.roleCmdMsg
+
+    val roleCmdOptDesc: String
+        get() = data.roleCmdOptDesc
+
+    val serverCmdDesc: String
+        get() = data.serverCmdDesc
+
+    val serverCmdMsg: String
+        get() = data.serverCmdMsg
+
+    val serverCmdOptDesc: String
+        get() = data.serverCmdOptDesc
 }

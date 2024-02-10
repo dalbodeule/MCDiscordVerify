@@ -3,11 +3,13 @@ package space.mori.mcdiscordverify.bukkit.discord
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.build.Commands
 import org.bukkit.Bukkit
@@ -20,12 +22,19 @@ import space.mori.mcdiscordverify.bukkit.config.Config
 import space.mori.mcdiscordverify.bukkit.config.Config.discordChannel
 import space.mori.mcdiscordverify.bukkit.config.Config.discordGuild
 import space.mori.mcdiscordverify.bukkit.config.Config.discordToken
+import space.mori.mcdiscordverify.bukkit.config.Config.role
 import space.mori.mcdiscordverify.bukkit.config.Config.verifyTimeout
 import space.mori.mcdiscordverify.bukkit.config.Language.isNotRegisteredCode
 import space.mori.mcdiscordverify.bukkit.config.Language.pingCmdDesc
 import space.mori.mcdiscordverify.bukkit.config.Language.pingCmdMsg
 import space.mori.mcdiscordverify.bukkit.config.Language.prefix
 import space.mori.mcdiscordverify.bukkit.config.Language.removeKickMsg
+import space.mori.mcdiscordverify.bukkit.config.Language.roleCmdDesc
+import space.mori.mcdiscordverify.bukkit.config.Language.roleCmdMsg
+import space.mori.mcdiscordverify.bukkit.config.Language.roleCmdOptDesc
+import space.mori.mcdiscordverify.bukkit.config.Language.serverCmdDesc
+import space.mori.mcdiscordverify.bukkit.config.Language.serverCmdMsg
+import space.mori.mcdiscordverify.bukkit.config.Language.serverCmdOptDesc
 import space.mori.mcdiscordverify.bukkit.config.Language.verifyCmdDesc
 import space.mori.mcdiscordverify.bukkit.config.Language.verifyCmdOptCode
 import space.mori.mcdiscordverify.bukkit.config.Language.verifyKickMsg
@@ -106,6 +115,7 @@ object Discord: Listener, ListenerAdapter() {
                         event.replyEmbeds(eb.build()).queue()
 
                         UUIDtoDiscordID.addUser(verifyUsers[code]!!.toString(), event.member!!.id)
+                        event.guild?.getRoleById(role.toLong())?.let { event.guild?.addRoleToMember(event.user, it) }
                         verifyUsers.remove(code)
                     } else {
                         event.reply(
@@ -113,6 +123,29 @@ object Discord: Listener, ListenerAdapter() {
                                 .replace("{code}", code)
                         ).queue()
                     }
+                }
+            }
+            "group" -> {
+                val role = event.getOption("role")?.asRole
+
+                if(role != null) {
+                    Config.role = role.idLong
+                    Config.save()
+
+                    event.reply(
+                        roleCmdMsg.replace("{role}", role.name)
+                    ).queue()
+                }
+            }
+            "server" -> {
+                val channel = event.getOption("channel")?.asChannel
+
+                if(channel != null) {
+                    discordChannel = channel.idLong
+                    discordGuild = channel.guild.idLong
+                    Config.save()
+
+                    event.reply(serverCmdMsg.replace("{channel}", channel.name)).queue()
                 }
             }
         }
@@ -131,7 +164,13 @@ object Discord: Listener, ListenerAdapter() {
                 guild?.updateCommands()?.addCommands(
                     Commands.slash("ping", pingCmdDesc),
                     Commands.slash("verify", verifyCmdDesc)
-                        .addOption(OptionType.STRING, "code", verifyCmdOptCode)
+                        .addOption(OptionType.STRING, "code", verifyCmdOptCode),
+                    Commands.slash("group", "group set")
+                        .addOption(OptionType.ROLE, "role", roleCmdOptDesc)
+                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNEL)),
+                    Commands.slash("server", serverCmdDesc)
+                        .addOption(OptionType.CHANNEL, "channel", serverCmdOptDesc)
+                        .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNEL))
                 )?.queue()
 
                 if (guild == null) {

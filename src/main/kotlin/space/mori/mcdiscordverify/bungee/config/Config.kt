@@ -1,5 +1,6 @@
 package space.mori.mcdiscordverify.bungee.config
 
+import space.mori.mcdiscordverify.bukkit.config.Config
 import space.mori.mcdiscordverify.common.config.ConfigData
 
 object Config : ConfigBase<ConfigData>(
@@ -29,4 +30,8 @@ object Config : ConfigBase<ConfigData>(
     var lang: String
         get() = data.lang
         set(value) { data.lang = value }
+
+    var role: Number
+        get() = Config.data.role
+        set(value) { Config.data.role = value }
 }

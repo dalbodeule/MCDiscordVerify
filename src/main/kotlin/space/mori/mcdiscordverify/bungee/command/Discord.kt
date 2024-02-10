@@ -2,8 +2,10 @@ package space.mori.mcdiscordverify.bungee.command
 
 import net.md_5.bungee.api.CommandSender
 import net.md_5.bungee.api.connection.ProxiedPlayer
+import space.mori.mcdiscordverify.bukkit.config.Language
 import space.mori.mcdiscordverify.bungee.config.Language.prefix
 import space.mori.mcdiscordverify.bungee.config.getDiscordUser
+import space.mori.mcdiscordverify.utils.sendColorMessage
 
 object Discord: CommandBase(
     mutableListOf(
@@ -13,9 +15,14 @@ object Discord: CommandBase(
             ""
         ) {
             override fun commandExecutor(sender: CommandSender, args: Array<out String>): Boolean {
-                val discordUser = (sender as ProxiedPlayer).getDiscordUser!!
+                /* val member = (sender as ProxiedPlayer).getDiscordUser
 
-                sendMessage(sender, "$prefix Your discord account is ${discordUser.name}")
+                if(member != null) {
+                    sendMessage(sender, "${Language.prefix} Your discord account is &9${member.effectiveName}&r (&6@${member.user.name}&r)")
+                } else {
+                    sendMessage(sender, "$prefix Your discord account is not found!")
+                } */
+                sendMessage(sender, "${Language.prefix} testing...")
 
                 return true
             }

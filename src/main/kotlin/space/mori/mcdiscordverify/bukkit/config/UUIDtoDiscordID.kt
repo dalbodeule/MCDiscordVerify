@@ -1,6 +1,6 @@
 package space.mori.mcdiscordverify.bukkit.config
 
-import net.dv8tion.jda.api.entities.User
+import net.dv8tion.jda.api.entities.Member
 import org.bukkit.entity.Player
 import space.mori.mcdiscordverify.bukkit.discord.Discord.bot
 
@@ -35,4 +35,7 @@ object UUIDtoDiscordID: ConfigBase<MutableMap<String, String>>(
     }
 }
 
-fun Player.getDiscordUser(): User? = UUIDtoDiscordID.getUser(this.uniqueId.toString())?.let { bot.getUserById(it) }
+val Player.getDiscordUser: Member?
+    get() = UUIDtoDiscordID.getUser(this.uniqueId.toString())?.let {
+        bot.getGuildById("${Config.discordGuild}")?.getMemberById(it)
+    }

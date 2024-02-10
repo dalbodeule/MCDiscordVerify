@@ -29,4 +29,8 @@ object Config : ConfigBase<ConfigData>(
     var lang: String
         get() = data.lang
         set(value) { data.lang = value }
+
+    var role: Number
+        get() = data.role
+        set(value) { data.role = value }
 }

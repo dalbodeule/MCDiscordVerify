@@ -3,9 +3,8 @@ package space.mori.mcdiscordverify.bukkit.command
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import space.mori.mcdiscordverify.bungee.config.Language.prefix
+import space.mori.mcdiscordverify.bukkit.config.Language.prefix
 import space.mori.mcdiscordverify.bukkit.config.getDiscordUser
-import space.mori.mcdiscordverify.bukkit.discord.Discord.guild
 import space.mori.mcdiscordverify.utils.sendColorMessage
 
 object Discord: CommandBase(
@@ -17,15 +16,14 @@ object Discord: CommandBase(
             "mcdiscordverify.discord"
         ) {
             override fun commandExecutor(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-                val member = (sender as Player).getDiscordUser()?.let { guild?.getMember(it) }
+                /* val member = (sender as Player).getDiscordUser
 
                 if (member != null) {
-                    sender.sendColorMessage("$prefix Your discord account is &9" +
-                        (if (member.nickname != null) member.nickname else member.user.name) +
-                        "&r (&6@${member.user.name}&r)")
+                    sender.sendColorMessage("$prefix Your discord account is &9${member.nickname}&r (&6@${member.user.name}&r)")
                 } else {
                     sender.sendColorMessage("$prefix Your discord account is not found!")
-                }
+                } */
+                sender.sendColorMessage("$prefix testing...")
 
                 return true
             }

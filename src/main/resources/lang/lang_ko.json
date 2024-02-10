@@ -8,5 +8,11 @@
   "pingCmdDesc": "Pong!",
   "pingCmdMsg": "Pong! 시스템이 동작중입니다.",
   "verifyCmdDesc": "당신의 마인크래프트 계정을 인증합니다.",
-  "verifyCmdOptCode": "서버에 접속하고 필요한 정보를 받으세요!"
+  "verifyCmdOptCode": "서버에 접속하고 필요한 정보를 받으세요!",
+  "roleCmdDesc": "인증된 유저의 역할을 설정합니다..",
+  "roleCmdMsg": "설정에 성공했습니다. {role}!",
+  "roleCmdOptDesc": "인증유저 역할",
+  "serverCmdDesc": "인증 채널을 설정합니다.",
+  "serverCmdMsg": "설정에 성공했습니다. {channel}!",
+  "serverCmdOptDesc": "인증채널"
 }

@@ -1,8 +1,11 @@
 package space.mori.mcdiscordverify.bungee.config
 
+import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.User
 import net.md_5.bungee.api.connection.ProxiedPlayer
+import space.mori.mcdiscordverify.bukkit.config.Config
 import space.mori.mcdiscordverify.bungee.discord.Discord
+import space.mori.mcdiscordverify.bungee.discord.Discord.bot
 
 object UUIDtoDiscordID: ConfigBase<MutableMap<String, String>>(
     data = mutableMapOf(),
@@ -30,9 +33,7 @@ object UUIDtoDiscordID: ConfigBase<MutableMap<String, String>>(
     }
 }
 
-val ProxiedPlayer.getDiscordUser: User?
-    get () {
-        val discordId = UUIDtoDiscordID.getUser(this.uniqueId.toString())
-
-        return if (discordId != null) Discord.bot.getUserById(discordId) else null
+val ProxiedPlayer.getDiscordUser: Member?
+    get() = UUIDtoDiscordID.getUser(this.uniqueId.toString())?.let {
+        bot.getGuildById("${Config.discordGuild}")?.getMemberById(it)
     }

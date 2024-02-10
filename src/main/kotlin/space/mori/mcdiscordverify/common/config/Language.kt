@@ -11,4 +11,10 @@ data class LanguageData(
     val pingCmdMsg: String = "Pong! System is operated!",
     val verifyCmdDesc: String = "verify your minecraft accounts.",
     val verifyCmdOptCode: String = "Can you get verify code on first connects.",
+    val roleCmdDesc: String = "Set verify user's role.",
+    val roleCmdMsg: String = "Success with {role}!",
+    val roleCmdOptDesc: String = "verify user's role.",
+    val serverCmdDesc: String = "Set verify channel.",
+    val serverCmdMsg: String = "Success with {channel}!",
+    val serverCmdOptDesc: String = "verify channel."
 )

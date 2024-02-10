@@ -8,5 +8,11 @@
   "pingCmdDesc": "Pong!",
   "pingCmdMsg": "Pong! System is operated!",
   "verifyCmdDesc": "verify your minecraft accounts.",
-  "verifyCmdOptCode": "Can you get verify code on first connects."
+  "verifyCmdOptCode": "Can you get verify code on first connects.",
+  "roleCmdDesc": "Set verify user's role.",
+  "roleCmdMsg": "Success with {role}!",
+  "roleCmdOptDesc": "verify user's role.",
+  "serverCmdDesc": "Set verify channel.",
+  "serverCmdMsg": "Success with {channel}!",
+  "serverCmdOptDesc": "verify channel."
 }

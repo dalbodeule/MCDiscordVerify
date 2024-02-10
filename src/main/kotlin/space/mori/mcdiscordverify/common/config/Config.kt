@@ -6,5 +6,6 @@ data class ConfigData(
     var discordGuild: Number = 0,
     var discordChannel: Number = 0,
     var verifyTimeout: Int = 120,
-    var lang: String = "en"
+    var lang: String = "en",
+    var role: Number = 0
 )
