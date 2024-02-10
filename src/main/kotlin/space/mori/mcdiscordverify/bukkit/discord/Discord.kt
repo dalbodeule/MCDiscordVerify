@@ -165,7 +165,7 @@ object Discord: Listener, ListenerAdapter() {
                     Commands.slash("ping", pingCmdDesc),
                     Commands.slash("verify", verifyCmdDesc)
                         .addOption(OptionType.STRING, "code", verifyCmdOptCode),
-                    Commands.slash("group", "group set")
+                    Commands.slash("group", roleCmdDesc)
                         .addOption(OptionType.ROLE, "role", roleCmdOptDesc)
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNEL)),
                     Commands.slash("server", serverCmdDesc)
@@ -174,8 +174,8 @@ object Discord: Listener, ListenerAdapter() {
                 )?.queue()
 
                 if (guild == null) {
-                    instance.logger.info("$prefix Guild is not found! plugin disabled.")
-                    instance.pluginLoader.disablePlugin(instance)
+                    instance.logger.info("$prefix Guild is not found! require /group commands.")
+                    instance.logger.info("https://discord.com/api/oauth2/authorize?client_id={APPLICATION_ID}&permissions=552171874368&scope=bot")
                 }
 
             } catch (ex: Exception) {
