@@ -38,6 +38,7 @@ import space.mori.mcdiscordverify.bungee.config.Language.serverCmdOptDesc
 import space.mori.mcdiscordverify.bungee.config.Language.verifyCmdDesc
 import space.mori.mcdiscordverify.bungee.config.Language.verifyCmdOptCode
 import space.mori.mcdiscordverify.bungee.config.Language.verifyKickMsg
+import space.mori.mcdiscordverify.bungee.config.Language.verifySuccessMsgDesc
 import space.mori.mcdiscordverify.bungee.config.UUIDtoDiscordID
 import space.mori.mcdiscordverify.bungee.config.getDiscordUser
 import space.mori.mcdiscordverify.utils.getColored
@@ -103,16 +104,18 @@ object Discord: Listener, ListenerAdapter() {
                     event.guild?.id == discordGuild.toString() &&
                     event.channel.id == discordChannel.toString()
                 ) {
-                    val code = event.getOption("code")!!.asString
+                    val code = event.getOption("code")?.asString
 
                     if (code in verifyUsers.keys) {
                         val eb = EmbedBuilder()
                         eb.setTitle(Language.verifySuccessMsgTitle)
                         eb.setColor(Color(0x88C959))
 
+                        val name = verifyUsers[code]?.let { Bukkit.getOfflinePlayer(it).name }
+                        if(name == null) verifyUsers[code]?.let { Bukkit.getPlayer(it)?.name ?: ""}
                         eb.setDescription(
-                            Language.verifySuccessMsgDesc
-                                .replace("{nickname}", Bukkit.getOfflinePlayer(verifyUsers[code]!!).name!!)
+                            verifySuccessMsgDesc
+                                .replace("{nickname}", name ?: "")
                         )
 
                         eb.setImage("https://minotar.net/helm/${verifyUsers[code]!!}")
@@ -124,7 +127,7 @@ object Discord: Listener, ListenerAdapter() {
                     } else {
                         event.reply(
                             Language.isNotRegisteredCode
-                                .replace("{code}", code)
+                                .replace("{code}", code ?: "")
                         ).queue()
                     }
                 }
@@ -165,7 +168,7 @@ object Discord: Listener, ListenerAdapter() {
 
                 val guild = bot.getGuildById(discordGuild.toLong())
 
-                guild?.updateCommands()?.addCommands(
+                bot.updateCommands().addCommands(
                     Commands.slash("ping", pingCmdDesc),
                     Commands.slash("verify", verifyCmdDesc)
                         .addOption(OptionType.STRING, "code", verifyCmdOptCode),
@@ -175,7 +178,7 @@ object Discord: Listener, ListenerAdapter() {
                     Commands.slash("server", serverCmdDesc)
                         .addOption(OptionType.CHANNEL, "channel", serverCmdOptDesc)
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNEL))
-                )?.queue()
+                ).queue()
 
                 if (guild == null) {
                     instance.logger.info("$prefix Guild is not found! require /group commands.")

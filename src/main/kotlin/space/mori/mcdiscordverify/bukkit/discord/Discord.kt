@@ -99,28 +99,30 @@ object Discord: Listener, ListenerAdapter() {
                     event.guild?.id == discordGuild.toString() &&
                     event.channel.id == discordChannel.toString()
                 ) {
-                    val code = event.getOption("code")?.asString ?: ""
+                    val code = event.getOption("code")?.asString
 
                     if (code in verifyUsers.keys) {
                         val eb = EmbedBuilder()
                         eb.setTitle(verifySuccessMsgTitle)
                         eb.setColor(Color(0x88C959))
 
+                        val name = verifyUsers[code]?.let { Bukkit.getOfflinePlayer(it).name }
+                        if(name == null) verifyUsers[code]?.let { Bukkit.getPlayer(it)?.name ?: ""}
                         eb.setDescription(
                             verifySuccessMsgDesc
-                                .replace("{nickname}", Bukkit.getOfflinePlayer(verifyUsers[code]!!).name!!)
+                                .replace("{nickname}", name ?: "")
                         )
 
-                        eb.setImage("https://minotar.net/helm/${verifyUsers[code]!!}")
+                        eb.setImage("https://minotar.net/helm/${verifyUsers[code]}")
                         event.replyEmbeds(eb.build()).queue()
 
-                        UUIDtoDiscordID.addUser(verifyUsers[code]!!.toString(), event.member!!.id)
+                        UUIDtoDiscordID.addUser(verifyUsers[code].toString(), event.member!!.id)
                         event.guild?.getRoleById(role.toLong())?.let { event.guild?.addRoleToMember(event.user, it) }
                         verifyUsers.remove(code)
                     } else {
                         event.reply(
                             isNotRegisteredCode
-                                .replace("{code}", code)
+                                .replace("{code}", code ?: "")
                         ).queue()
                     }
                 }
@@ -161,7 +163,7 @@ object Discord: Listener, ListenerAdapter() {
 
                 guild = bot.getGuildById(discordGuild.toLong())
 
-                guild?.updateCommands()?.addCommands(
+                bot.updateCommands().addCommands(
                     Commands.slash("ping", pingCmdDesc),
                     Commands.slash("verify", verifyCmdDesc)
                         .addOption(OptionType.STRING, "code", verifyCmdOptCode),
@@ -171,7 +173,7 @@ object Discord: Listener, ListenerAdapter() {
                     Commands.slash("server", serverCmdDesc)
                         .addOption(OptionType.CHANNEL, "channel", serverCmdOptDesc)
                         .setDefaultPermissions(DefaultMemberPermissions.enabledFor(Permission.ADMINISTRATOR, Permission.MANAGE_CHANNEL))
-                )?.queue()
+                ).queue()
 
                 if (guild == null) {
                     instance.logger.info("$prefix Guild is not found! require /group commands.")
