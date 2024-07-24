@@ -10,6 +10,10 @@ import space.mori.mcdiscordverify.bukkit.command.Discord as DiscordCommand
 class MCDiscordVerify: JavaPlugin() {
     companion object {
         lateinit var instance: MCDiscordVerify
+        val pluginConfig = Config
+        val uuidToDiscordID = UUIDtoDiscordID
+        val language = Language
+        val discordHandler = Discord
     }
 
     override fun onEnable() {
@@ -24,13 +28,13 @@ class MCDiscordVerify: JavaPlugin() {
         }
 
         // config initialize
-        Config.load()
-        UUIDtoDiscordID.load()
-        Language.load()
-        Language.save()
+        pluginConfig.load()
+        uuidToDiscordID.load()
+        language.load()
+        language.save()
 
         // jda server initialize
-        Discord.main()
+        discordHandler.main()
 
         // command initialize
         server.getPluginCommand("discord")?.run {
@@ -42,10 +46,10 @@ class MCDiscordVerify: JavaPlugin() {
     }
 
     override fun onDisable() {
-        Discord.disable()
+        discordHandler.disable()
 
-        Config.save()
-        UUIDtoDiscordID.save()
-        Language.save()
+        pluginConfig.save()
+        uuidToDiscordID.save()
+        language.save()
     }
 }

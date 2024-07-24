@@ -18,6 +18,10 @@ import space.mori.mcdiscordverify.bungee.command.Discord as DiscordCommand
 class MCDiscordVerify: Plugin() {
     companion object {
         lateinit var instance: MCDiscordVerify
+        val pluginConfig = Config
+        val uuidToDiscordID = UUIDtoDiscordID
+        val language = Language
+        val discordHandler = Discord
     }
 
     override fun onEnable() {
@@ -32,13 +36,13 @@ class MCDiscordVerify: Plugin() {
         }
 
         // config initialize
-        Config.load()
-        UUIDtoDiscordID.load()
-        Language.load()
-        Language.save()
+        pluginConfig.load()
+        uuidToDiscordID.load()
+        language.load()
+        language.save()
 
         // jda server initialize
-        Discord.main()
+        discordHandler.main()
 
         // command initialize
         proxy.pluginManager.registerCommand(this, DiscordCommand)
@@ -48,11 +52,11 @@ class MCDiscordVerify: Plugin() {
     }
 
     override fun onDisable() {
-        Discord.disable()
+        discordHandler.disable()
 
-        Config.save()
-        UUIDtoDiscordID.save()
-        Language.save()
+        pluginConfig.save()
+        uuidToDiscordID.save()
+        language.save()
     }
 
     private fun getResource(filename: String?): InputStream? {
