@@ -10,3 +10,6 @@ permissions:
   mcdiscordverify.discord:
     description: Allows discord command
     default: true
+  mcdiscordverify.reload:
+    description: Allows reload subcommand
+    default: admin
